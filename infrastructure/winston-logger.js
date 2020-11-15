@@ -1,4 +1,3 @@
-const { transports } = require('winston');
 const winston = require('winston');
 const {transports, exceptionHandlers} = require('./log-transports');
 const os = require('os');

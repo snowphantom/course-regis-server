@@ -2,12 +2,12 @@ const bodyParser = require('body-parser');
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const errorHandler = require('../infrastructure/error-handler');
+const path = require('path');
 
 exports.initialize_middleware = (app) => {
     app.set('views', path.join(__dirname, 'views'));
     app.set('view engine', 'jade');
 
-    app.use(logger('dev'));
     app.use(express.json());
     app.use(express.urlencoded({ extended: false }));
     app.use(bodyParser.json({extended: true}));

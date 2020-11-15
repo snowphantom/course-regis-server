@@ -1,4 +1,15 @@
 {
     "production": true,
-    "connectionString": ""
+    "database": {
+        "masterUrl" : "localhost:27017",
+        "masterDbname": "masterCourseRegis",
+        "masterDBoptions": {
+        },
+        "masterCollections": {
+            "userCollection": "user",
+            "courseCollection": "course",
+            "courseRegisCollection":  "coures-regis"
+        }
+    },
+    "secretKey": "Th!t_1s-C0ur3_ReG!zT3R-4pPljC4tj0n"
 }
