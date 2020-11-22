@@ -1,14 +1,14 @@
 {
     "production": true,
     "database": {
-        "masterUrl" : "mongodb://127.0.0.1:27017/masterCourseRegis",
+        "masterUrl" : "mongodb://127.0.0.1:27017",
         "masterDbname": "masterCourseRegis",
         "masterDBoptions": {
         },
         "masterCollections": {
             "userCollection": "user",
             "courseCollection": "course",
-            "courseRegisCollection":  "coures-regis"
+            "RegistrationCollection":  "registration"
         }
     },
     "secretKey": "Th!t_1s-C0ur3_ReG!zT3R-4pPljC4tj0n"

@@ -1,16 +1,26 @@
-const { NotExtended } = require("http-errors");
 const userService = require("../services/user-service");
-const BSON = require('bson');
 const validateUltis = require('../utils/validate-ulti');
 const { v4 : uuidv4 } = require('uuid');
+const md5 = require('md5');
 
-async function authenticate(data) {
-    userService.authenticate(data)
-        .then(user => res.json(user))
+async function authenticate(req, res, next) {
+    const { username, password } = req.body;
+    userService.authenticate({username, password})
+        .then(data => {
+            delete data.password;
+            delete data._id;
+            res.json({
+                success: true,
+                message: 'Authenticate successfully',
+                data: [
+                    data
+                ],
+            })
+        })
         .catch(err =>  {
             if (err.exceptionType === 'AuthenticateException') {
                 res.status(401).send({
-                    status: false,
+                    success: false,
                     message: err.message
                 });
             } else next(err);
@@ -18,7 +28,15 @@ async function authenticate(data) {
 }
 
 async function listUsers(req, res, next) {
-    return await userService.listUsers(req.body['query']);
+    userService.listUsers(req.body)
+        .then(users => {
+            res.json({
+                success: true,
+                message: 'Found',
+                data: [...users]
+            });
+        })
+        .catch(err => next(err));
 }
 
 async function getUser(req, res, next) {
@@ -42,7 +60,7 @@ async function getUser(req, res, next) {
 
 async function createUser(req, res, next) {
     let user = req.body;
-    if (!user) {
+    if (!user || user && user.length < 1) {
         return res.json({
             success: false,
             message: `Create user error. Please check your data.`
@@ -60,32 +78,24 @@ async function createUser(req, res, next) {
     if (item) {
         return res.json({
             success: false,
-            message: 'This username is taken. Please select another.',
+            message: 'This username was taken. Please select another.',
         });
     }
 
     user['_id'] = uuidv4();
     user['state'] = 1;
-    user['type'] = user['type'] ? user['type'] : 1,
+    user['type'] = user['type'] !== undefined ? user['type'] : 1;
+    user['password'] = user['password'] && md5(user['password']);
     userService.updateUser(user)
         .then(data => {
-            if (data) {
-                res.json({
-                        success: true,
-                        message: 'Create user successfully.',
-                        data: [
-                            data,
-                        ]
-                    });
-            } else {
-                res.json({
-                    success: false,
-                    message: `Create user error. Please check your data.`
-                });
-            }
+            res.json({
+                success: true,
+                message: 'Create user successfully.',
+                data: [
+                    data,
+                ]
+            });
         }).catch(err => next(err));
-
-    
 }
 
 module.exports = {
