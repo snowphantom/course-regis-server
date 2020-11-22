@@ -20,6 +20,8 @@ const c = controllerHandler;
 module.exports = (app) => {
 
     // user router
-    app.get('/api/user/list', c(userController.listUsers, (req, res) => [req.body]));
-    app.post('/api/user/authenticate', c(userController.authenticate, (req, res) => [req.body]));
+    app.get('/api/user/list', userController.listUsers);
+    app.post('/api/user/authenticate', userController.authenticate);
+    app.post('/api/user/create', userController.createUser);
+    app.get('/api/user/info', userController.getUser);
 };

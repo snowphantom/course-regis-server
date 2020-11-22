@@ -32,7 +32,7 @@ module.exports.get = async (params) => {
             group = 'master';
             dbUrl = config.get('database')['masterUrl'];
             dbName = config.get('database')['masterDbname'];
-            dbOptions = config.get('database')['masterDboptions'];
+            dbOptions = config.get('database')['masterDboptions'] || {};
         }
 
         if (globalDbStack[group]) {
@@ -47,19 +47,18 @@ module.exports.get = async (params) => {
                 reconnectTries: Number.MAX_VALUE,
                 connectTimeoutMS: 5000,
                 socketTimeoutMS: 60000,
-                maxTimeMS: 30000,
                 autoReconnect: true,
                 reconnectInterval: 30 * 1000 // Reconnect every 30s
             }, dbOptions || {}))
             .then((client) => {
                 isConnecting = false;
-                console.log(`Connecting successfully to db ${group}.${dbname} ${dbUrl} ${dbOptions}. Request from ${JSON.stringify(params)}`);
-                globalDbStack[group] = client.db(dbname);
+                console.log(`Connecting successfully to db ${group}.${dbName} ${dbUrl} ${dbOptions}. Request from ${JSON.stringify(params)}`);
+                globalDbStack[group] = client.db(dbName);
                 return globalDbStack[group];
             })
             .catch((err) => {
                 isConnecting = false;
-                console.log(`Error connecting to db ${group}.${dbname} ${dbUrl} ${dbOptions}. Request from ${JSON.stringify(params)}`);
+                console.log(`Error connecting to db ${group}.${dbName} ${dbUrl} ${dbOptions}. Request from ${JSON.stringify(params)}`);
             })
     } catch(err) {
         isConnecting = false;

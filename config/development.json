@@ -1,7 +1,7 @@
 {
     "production": false,
     "database": {
-        "masterUrl" : "localhost:27017",
+        "masterUrl" : "mongodb://127.0.0.1:27017/masterCourseRegis",
         "masterDbname": "masterCourseRegis",
         "masterDBoptions": {
         },

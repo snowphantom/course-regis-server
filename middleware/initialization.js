@@ -1,7 +1,6 @@
 const bodyParser = require('body-parser');
 const express = require('express');
 const cookieParser = require('cookie-parser');
-const errorHandler = require('../infrastructure/error-handler');
 const path = require('path');
 
 exports.initialize_middleware = (app) => {
@@ -26,6 +25,4 @@ exports.initialize_middleware = (app) => {
 
         next();
     });
-
-    app.use(errorHandler);
 };

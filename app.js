@@ -1,6 +1,7 @@
 var express = require('express');
 var config = require('config');
 var app = express();
+const errorHandler = require('./infrastructure/error-handler');
 
 require('./middleware/initialization').initialize_middleware(app);
 
@@ -14,5 +15,7 @@ app.get('/ping', (req, res, next) => {
 });
 
 require('./router')(app);
+
+app.use(errorHandler);
 
 module.exports = app;
