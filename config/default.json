@@ -8,7 +8,7 @@
         "masterCollections": {
             "userCollection": "user",
             "courseCollection": "course",
-            "RegistrationCollection":  "registration"
+            "registrationCollection":  "registration"
         }
     },
     "secretKey": "Th!t_1s-C0ur3_ReG!zT3R-4pPljC4tj0n"

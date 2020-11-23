@@ -13,7 +13,14 @@ async function authenticate({username, password}) {
     const hashPassword = md5(password.trim());
 
     if (user && user.password === hashPassword) {
-        const token = jwt.sign({sub: user._id}, config.get('secretKey'), {expiresIn: '7d'});
+        const token = jwt.sign({
+            data: {
+                id: user['_id'],
+                username: user['username'],
+                state: user['state'],
+                type: user['type'],
+            }
+        }, config.get('secretKey'), {expiresIn: '7d'});
         return {...user, token};
     } else {
         throw new AuthenticateException("Your username or password isn't incorrect. Try again.");

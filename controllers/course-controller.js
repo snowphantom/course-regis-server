@@ -27,11 +27,11 @@ const createCourse = async (req, res, next) => {
         });
     }
     
-    let item = await courseService.getCourse(course.code);
-    if (item) {
+    let items = await courseService.getCourse([course.code]);
+    if (items && items.length > 0) {
         return res.json({
             success: false,
-            message: `This course was registered in system. Please try again.`
+            message: `This course was registered on system. Please try again.`
         });
     }
 
@@ -93,13 +93,21 @@ const removeCourse = async (req, res, next) => {
 
 const getCourse = async (req, res, next) => {
     const {code} = req.body;
-    const course = await courseService.getCourse(code && code.toUpperCase());
+    const codeList = code && code.toUpperCase().split(',');
+    if (!codeList || codeList.length < 1) {
+        return res.json({
+            success: false,
+            message: `Your data was not fully. Please try again`
+        });
+    }
+
+    const course = await courseService.getCourse(codeList);
     if (course) {
         res.json({
             success: true,
-            message: `Found it`,
+            message: `Found`,
             data: [
-                course,
+                ...course,
             ]
         });
     } else {

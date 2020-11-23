@@ -35,9 +35,9 @@ async function updateCourse(course) {
     return {...course, last_modified};
 }
 
-async function getCourse(code) {
-    const foundCourse = await queryService(courseCollectionName, {find: {code}});
-    return foundCourse[0];
+async function getCourse(codes) {
+    const foundCourse = await queryService(courseCollectionName, {find: {code: {$in: codes}}});
+    return foundCourse;
 }
 
 async function removeCourse(code) {
