@@ -1,8 +1,5 @@
 const courseService = require('../services/course-service');
 const { v4 : uuidv4 } = require('uuid');
-const md5 = require('md5');
-const Exception = require('../exceptions/exception');
-const e = require('express');
 
 const listCourse = async (req, res, next) => {
     courseService.listCourses(req.body)

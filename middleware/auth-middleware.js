@@ -9,16 +9,14 @@ const authMiddleware = (req, res, next) => {
             verifyAuthToken(authorization);
         } catch (err) {
             return res.status(401).json({
-                error: {
-                    message: err.message
-                }
+                success: false,
+                message: err.message
             });
         }
     } else {
         return res.status(401).json({
-            error: {
-                message: 'No token'
-            }
+            success: false,
+            message: 'No token'
         });
     }
     next();
@@ -33,22 +31,18 @@ const strictAuthMiddleWare = async (req, res, next) => {
             const payload = await verifyAuthToken(authorization);
             const usernameSaved = payload && payload.data && payload.data.username;
             if (!(username && usernameSaved && username === usernameSaved)) {
-                throw new AuthenticateException(`Your don't have permission.`)
+                throw new AuthenticateException(`You don't have permission or your data isn't fully.`)
             }
         } catch (err) {
             return res.status(401).json({
                 success: false,
-                error: {
-                    message: err.message,
-                },
+                message: err.message,
             });
         }
     } else {
         return res.status(401).json({
             success: false,
-            error: {
-                message: `No token`,
-            },
+            message: `No token`,
         });
     }
     next();
@@ -63,22 +57,18 @@ const adminAuthMiddleWare = (req, res, next) => {
             const payload = verifyAuthToken(authorization);
             const type = payload && payload.data && payload.data.type;
             if (!type || `${type}` !== '0') {
-                throw new AuthenticateException(`Your don't have permission.`);
+                throw new AuthenticateException(`You don't have permission.`);
             }
         } catch (err) {
             return res.status(401).json({
                 success: false,
-                error: {
-                    message: err.message,
-                },
+                message: err.message,
             });
         }
     } else {
         return res.status(401).json({
             success: false,
-            error: {
-                message: `No token`,
-            },
+            message: `No token`,
         });
     }
     next();

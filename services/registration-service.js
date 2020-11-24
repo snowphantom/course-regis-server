@@ -15,6 +15,7 @@ async function listRegistration(query) {
 };
 
 async function updateRegistration(data) { 
+    delete data.code;
     data['created_time'] = data['created_time'] || Date.now();
     const last_modified = Date. now();
     let db = await mongoDbConnectionPool.get({});
@@ -50,6 +51,17 @@ async function removeRegistration(code) {
         .deleteOne({code});
 }
 
+async function updateCourse(course) {
+    let db = await mongoDbConnectionPool.get({});
+    await db.collection(registrationCollectionName)
+        .find({
+            enrolled: {
+                $elemMatch: {
+                    code: course.code
+                },
+            }
+        });
+};
 module.exports = {
     listRegistration,
     updateRegistration,
