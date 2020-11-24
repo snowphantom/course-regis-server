@@ -14,34 +14,32 @@ async function listRegistration(query) {
     return await queryService(registrationCollectionName, query);
 };
 
-async function updateRegistration(data, course) {
-    delete data.code;
+async function updateRegistration(data) { 
     data['created_time'] = data['created_time'] || Date.now();
-    const last_modified = Date.now();
+    const last_modified = Date. now();
     let db = await mongoDbConnectionPool.get({});
     let updated = await db.collection(registrationCollectionName)
         .updateOne(
             {username: data['username']},
-            {$set: Object.assign({}, data, {
-                last_modified,
-                rolledup: [...(data.rolledup || []), course]
-            })},
+            {
+                $set: Object.assign({}, data, {last_modified}),
+            },
             {upsert: true}
         );
 
     if (!updated || (updated.upsertedCount && parseInt(updated.upsertedCount) < 1)) {
-        throw Exception('Update database failed.');
+        throw new Exception('Update database failed.');
     }
 
     return {...data, last_modified};
 }
 
-async function getRegistrationByUsername(username) {
+async function getEnrollByUsername(usernames) {
     const foundCourse = await queryService(registrationCollectionName, {find: {username: {$in: usernames}}});
-    return foundCourse;
+    return foundCourse[0];
 }
 
-async function getRegistrationByCode(codes) {
+async function getEnrollByCode(codes) {
     const foundCourse = await queryService(registrationCollectionName, {find: {code: {$in: codes}}});
     return foundCourse;
 }
@@ -55,7 +53,7 @@ async function removeRegistration(code) {
 module.exports = {
     listRegistration,
     updateRegistration,
-    getRegistrationByUsername,
-    getRegistrationByCode,
+    getEnrollByUsername,
+    getEnrollByCode,
     removeRegistration,
 };

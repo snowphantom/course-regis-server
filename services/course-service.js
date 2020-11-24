@@ -29,7 +29,7 @@ async function updateCourse(course) {
         );
 
     if (!updated || (updated.upsertedCount && updated.upsertedCount < 1)) {
-        throw Exception('Update database failed.');
+        throw new Exception('Update database failed.');
     }
 
     return {...course, last_modified};
