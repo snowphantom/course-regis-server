@@ -35,5 +35,5 @@ module.exports = (app) => {
 
     // Registration router
     app.post('/api/registration/rollup', strictAuthMiddleWare, registrationController.rollup);
-
+    app.post('/api/registration/list', strictAuthMiddleWare, registrationController.list);
 };

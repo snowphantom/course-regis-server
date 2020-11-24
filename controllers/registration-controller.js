@@ -1,7 +1,7 @@
 const courseService = require('../services/course-service');
 const registrationService = require('../services/registration-service');
 
-const rollup = (req, res, next) => {
+const rollup = async (req, res, next) => {
     const data = req.body;
 
     if (!data || !data.code || !data.username) {
@@ -11,7 +11,9 @@ const rollup = (req, res, next) => {
         });
     }
 
-    const foundCourses = courseService.getCourse([data.code]);
+    data['code'] = data.code.length > 0 && data.code.toUpperCase();
+
+    const foundCourses = await courseService.getCourse([data.code]);
     if (foundCourses && foundCourses.length > 0) {
         const course = foundCourses[0];
     
@@ -19,7 +21,7 @@ const rollup = (req, res, next) => {
             .then(data => {
                 res.json({
                     success: true,
-                    message: `User: ${data.username} enroll ${course.code} successfully`,
+                    message: `User ${data.username} enroll ${course.code} successfully`,
                     data: [
                         data,
                     ]
@@ -34,7 +36,11 @@ const rollup = (req, res, next) => {
     }
 };
 
+const list = async (req, res, next) => {
+
+};
+
 module.exports = {
     rollup,
-
+    list,
 }

@@ -66,10 +66,20 @@ const adminAuthMiddleWare = (req, res, next) => {
                 throw new AuthenticateException(`Your don't have permission.`);
             }
         } catch (err) {
-            throw new AuthenticateException(err.message)
+            return res.status(401).json({
+                success: false,
+                error: {
+                    message: err.message,
+                },
+            });
         }
     } else {
-        throw new AuthenticateException('No token');
+        return res.status(401).json({
+            success: false,
+            error: {
+                message: `No token`,
+            },
+        });
     }
     next();
     return;

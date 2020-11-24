@@ -15,21 +15,21 @@ async function listRegistration(query) {
 };
 
 async function updateRegistration(data, course) {
-
+    delete data.code;
     data['created_time'] = data['created_time'] || Date.now();
     const last_modified = Date.now();
     let db = await mongoDbConnectionPool.get({});
     let updated = await db.collection(registrationCollectionName)
         .updateOne(
             {username: data['username']},
-            {$push: {rolledup: {$each: [course]}}},
             {$set: Object.assign({}, data, {
-                last_modified
+                last_modified,
+                rolledup: [...(data.rolledup || []), course]
             })},
             {upsert: true}
         );
 
-    if (!updated || (updated.upsertedCount && updated.upsertedCount < 1)) {
+    if (!updated || (updated.upsertedCount && parseInt(updated.upsertedCount) < 1)) {
         throw Exception('Update database failed.');
     }
 
