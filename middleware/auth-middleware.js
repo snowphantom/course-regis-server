@@ -28,7 +28,7 @@ const strictAuthMiddleWare = async (req, res, next) => {
         try {
             const { authorization, username } = Object.assign(req.headers, req.body, req.query);
 
-            const payload = await verifyAuthToken(authorization);
+            const payload = verifyAuthToken(authorization);
             const usernameSaved = payload && payload.data && payload.data.username;
             if (!(username && usernameSaved && username === usernameSaved)) {
                 throw new AuthenticateException(`You don't have permission or your data isn't fully.`)
