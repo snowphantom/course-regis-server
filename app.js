@@ -5,6 +5,11 @@ const errorHandler = require('./infrastructure/error-handler');
 
 require('./middleware/initialization').initialize_middleware(app);
 
+const swaggerUI = require('swagger-ui-express');
+const swaggerDocument = require('./swagger.json');
+
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(swaggerDocument));
+
 app.get('/', (req, res, next) => {
   res.status(200).send("<center><h1>Course Register System API<h1></center>");
 });
