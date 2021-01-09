@@ -89,7 +89,7 @@ const removeCourse = async (req, res, next) => {
 };
 
 const getCourse = async (req, res, next) => {
-    const {code} = req.body;
+    const {code} = Object.assign(req.body, req.query);
     const codeList = code && code.toUpperCase().split(',');
     if (!codeList || codeList.length < 1) {
         return res.json({

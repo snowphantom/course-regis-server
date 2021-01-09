@@ -12,9 +12,7 @@ async function authenticate(req, res, next) {
             res.json({
                 success: true,
                 message: 'Authenticate successfully',
-                data: [
-                    data
-                ],
+                data,
             })
         })
         .catch(err =>  {

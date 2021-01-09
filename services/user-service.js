@@ -20,7 +20,7 @@ async function authenticate({username, password}) {
                 state: user['state'],
                 type: user['type'],
             }
-        }, config.get('secretKey'), {expiresIn: '7d'});
+        }, config.get('secretKey'), {expiresIn: '30d'});
         return {...user, token};
     } else {
         throw new AuthenticateException("Your username or password isn't incorrect. Try again.");

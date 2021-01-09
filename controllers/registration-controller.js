@@ -74,7 +74,7 @@ const rolloff = async (req, res, next) => {
     const courseCode = data.code.length > 0 && data.code.toUpperCase();
 
     const enroll = await registrationService.getEnrollByUsername([data.username]) || {};
-    const indexOfCourse = enroll && enroll.enrolled ? enroll.enrolled.findIndex(e => `${e.code}` === `${courseCode}`) : -1;
+    const indexOfCourse = enroll && enroll.enrolled ? enroll.enrolled.findIndex(e => `${e}` === `${courseCode}`) : -1;
     if (indexOfCourse < 0) {
         return res.json({
             success: false,
@@ -113,7 +113,7 @@ const list = async (req, res, next) => {
 };
 
 const getEnroll = async (req, res, next) => {
-    const { username } = req.body;
+    const { username } = Object.assign({}, req.body, req.query);
     if (!username || username.length < 1) {
         return res.json({
             success: false,
@@ -126,9 +126,7 @@ const getEnroll = async (req, res, next) => {
         res.json({
             success: true,
             message: `Found`,
-            data: [
-                enroll,
-            ]
+            data: enroll
         });
     } else {
         return res.status(404).json({

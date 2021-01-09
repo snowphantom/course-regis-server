@@ -1,12 +1,12 @@
 const AuthenticateException = require('../exceptions/authenticate-exception');
 const { verifyAuthToken } = require('../infrastructure/app-auth');
 
-const authMiddleware = (req, res, next) => {
+const authMiddleware = async (req, res, next) => {
     if (req.hasOwnProperty('headers') && req.headers.hasOwnProperty('authorization')) {
         try {
             const { authorization } = Object.assign(req.headers, req.body, req.query);
 
-            verifyAuthToken(authorization);
+            await verifyAuthToken(authorization);
         } catch (err) {
             return res.status(401).json({
                 success: false,
@@ -28,7 +28,7 @@ const strictAuthMiddleWare = async (req, res, next) => {
         try {
             const { authorization, username } = Object.assign(req.headers, req.body, req.query);
 
-            const payload = verifyAuthToken(authorization);
+            const payload = await verifyAuthToken(authorization);
             const usernameSaved = payload && payload.data && payload.data.username;
             if (!(username && usernameSaved && username === usernameSaved)) {
                 throw new AuthenticateException(`You don't have permission or your data isn't fully.`)
@@ -49,12 +49,12 @@ const strictAuthMiddleWare = async (req, res, next) => {
     return;
 };
 
-const adminAuthMiddleWare = (req, res, next) => {
+const adminAuthMiddleWare = async (req, res, next) => {
     if (req.hasOwnProperty('headers') && req.headers.hasOwnProperty('authorization')) {
         try {
             const { authorization } = Object.assign(req.headers, req.body, req.query);
 
-            const payload = verifyAuthToken(authorization);
+            const payload = await verifyAuthToken(authorization);
             const type = payload && payload.data && payload.data.type;
             if (!type || `${type}` !== '0') {
                 throw new AuthenticateException(`You don't have permission.`);
