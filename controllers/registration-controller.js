@@ -17,7 +17,7 @@ const rollup = async (req, res, next) => {
 
     const enroll = await registrationService.getEnrollByUsername([data.username]) || {};
     enroll['enrolled'] = enroll && enroll.enrolled || [];
-    if (enroll.enrolled && enroll.enrolled.filter(e => e.code === courseCode).length > 0) {
+    if (enroll.enrolled && enroll.enrolled.filter(e => e === courseCode).length > 0) {
         return res.json({
             success: false,
             message: `Course ${courseCode} was enrolled.`
@@ -27,11 +27,12 @@ const rollup = async (req, res, next) => {
     data['_id'] = enroll && enroll._id || uuidv4();
     data = Object.assign({}, data, enroll);
     const foundCourses = await courseService.getCourse([courseCode]);
+    const errolledCourses = await courseService.getCourse([...enroll.enrolled]);
     
     if (foundCourses && foundCourses.length > 0) {
         const course = foundCourses[0];
 
-        const dupDateCourses = enroll.enrolled && enroll.enrolled.filter(e => e.day === course.day);
+        const dupDateCourses = errolledCourses && errolledCourses.filter(e => e.day === course.day);
         for (let item of dupDateCourses) {
             if (checkConflictTime(course, item)) {
                 return res.json({
@@ -41,16 +42,14 @@ const rollup = async (req, res, next) => {
             }
         };
 
-        data['enrolled'].push(course);
+        data['enrolled'].push(course.code);
     
         registrationService.updateRegistration(data)
             .then(data => {
                 res.json({
                     success: true,
                     message: `User ${data.username} enroll ${courseCode} successfully`,
-                    data: [
-                        data,
-                    ]
+                    data
                 });
             })
             .catch(err => next(err));
@@ -92,9 +91,7 @@ const rolloff = async (req, res, next) => {
                 res.json({
                     success: true,
                     message: `User ${data.username} roll off ${courseCode} successfully`,
-                    data: [
-                        data,
-                    ]
+                    data
                 });
             })
             .catch(err => next(err));
@@ -122,7 +119,7 @@ const getEnroll = async (req, res, next) => {
     }
 
     const enroll = await registrationService.getEnrollByUsername([username]);
-    if (enroll && enroll.enrolled && enroll.enrolled.length > 0) {
+    if (enroll && enroll.enrolled) {
         res.json({
             success: true,
             message: `Found`,
