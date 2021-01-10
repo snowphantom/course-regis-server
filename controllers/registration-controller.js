@@ -119,18 +119,11 @@ const getEnroll = async (req, res, next) => {
     }
 
     const enroll = await registrationService.getEnrollByUsername([username]);
-    if (enroll && enroll.enrolled) {
-        res.json({
-            success: true,
-            message: `Found`,
-            data: enroll
-        });
-    } else {
-        return res.status(404).json({
-            success: false,
-            message: `Not found`
-        });
-    }
+    res.json({
+        success: true,
+        message: `Found`,
+        data: enroll
+    });
 };
 
 module.exports = {
