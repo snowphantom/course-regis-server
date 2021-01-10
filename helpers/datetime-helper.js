@@ -18,6 +18,17 @@ const getMinute = (content) => {
     return parseInt(data[1]);
 }
 
+const checkValidDuration = (start_time, end_time) => {
+    const start = new Date(0,0,0,getHour(start_time), getMinute(start_time));
+    const end = new Date(0,0,0,getHour(end_time), getMinute(end_time) - 45);
+
+    if (start >= end) {
+        return false;
+    }
+
+    return true;
+}
+
 const checkConflictTime = (item_1, item_2) => {
     const time_1 = {
         start_time: new Date(0,0,0,getHour(item_1.start_time), getMinute(item_1.start_time)),
@@ -47,4 +58,5 @@ module.exports = {
     getHour,
     getMinute,
     checkConflictTime,
+    checkValidDuration,
 }

@@ -1,4 +1,5 @@
 const courseService = require('../services/course-service');
+const {checkValidDuration} = require('../helpers/datetime-helper');
 const { v4 : uuidv4 } = require('uuid');
 
 const listCourse = async (req, res, next) => {
@@ -18,9 +19,16 @@ const createCourse = async (req, res, next) => {
     let course = req.body;
 
     if (!course || !course.code) {
-        return res.json({
+        return res.status(406).json({
             success: false,
             message: `Your data was not fully. Please try again.`
+        });
+    }
+
+    if (!checkValidDuration(course.start_time, course.end_time)) {
+        return res.status(406).json({
+            success: false,
+            message: `Your start time is conflict with end time. Please try again.`
         });
     }
     
