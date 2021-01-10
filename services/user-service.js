@@ -23,7 +23,7 @@ async function authenticate({username, password}) {
         }, config.get('secretKey'), {expiresIn: '30d'});
         return {...user, token};
     } else {
-        throw new AuthenticateException("Your username or password isn't incorrect. Try again.");
+        throw new AuthenticateException("Your username or password is incorrect. Try again.");
     }
 }
 
