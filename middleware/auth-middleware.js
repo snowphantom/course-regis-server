@@ -56,7 +56,7 @@ const adminAuthMiddleWare = async (req, res, next) => {
 
             const payload = await verifyAuthToken(authorization);
             const type = payload && payload.data && payload.data.type;
-            if (!type || `${type}` !== '0') {
+            if (typeof type === 'undefined' || `${type}` !== '0') {
                 throw new AuthenticateException(`You don't have permission.`);
             }
         } catch (err) {

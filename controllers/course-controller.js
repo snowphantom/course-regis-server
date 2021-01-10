@@ -28,7 +28,7 @@ const createCourse = async (req, res, next) => {
     if (items && items.length > 0) {
         return res.json({
             success: false,
-            message: `This course was registered on system. Please try again.`
+            message: `This course \'${course.code}\' was registered on system. Please try again.`
         });
     }
 
@@ -40,9 +40,7 @@ const createCourse = async (req, res, next) => {
             res.json({
                 success: true,
                 message: `Create course successfully`,
-                data: [
-                    data,
-                ]
+                data
             });
         })
         .catch(err => next(err));
