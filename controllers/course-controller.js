@@ -61,16 +61,15 @@ const updateCourse = async (req, res, next) => {
             res.json({
                 success: true,
                 message: `Update course successfully`,
-                data: [
-                    data,
-                ]
+                data
             });
         })
         .catch(err => next(err));
 };
 
 const removeCourse = async (req, res, next) => {
-    const {code} = req.body;
+    const {code} = Object.assign(req.body, req.query);
+
     await courseService.removeCourse(code && code.toUpperCase())
         .then(result => {
             res.json({
@@ -101,9 +100,7 @@ const getCourse = async (req, res, next) => {
         res.json({
             success: true,
             message: `Found`,
-            data: [
-                ...course,
-            ]
+            data: course
         });
     } else {
         return res.status(404).json({

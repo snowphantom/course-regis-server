@@ -21,7 +21,7 @@ async function updateCourse(course) {
     let db = await mongoDbConnectionPool.get({});
     let updated = await db.collection(courseCollectionName)
         .updateOne(
-            {_id: course['_id']},
+            {code: course['code']},
             {$set: Object.assign({}, course, {
                 last_modified
             })},
